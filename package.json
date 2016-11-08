@@ -1,0 +1,32 @@
+{
+  "name": "headerparser",
+  "version": "1.0.0",
+  "description": "URL shortener, validates URL",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tpoikela/fcc-api-urlshortener.git"
+  },
+  "keywords": [
+    "express",
+    "node",
+    "fcc"
+  ],
+  "author": "Tuomas Poikela",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tpoikela/fcc-api-urlshortener/issues"
+  },
+  "homepage": "https://github.com/tpoikela/fcc-api-urlshortener#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0"
+  }
+}
