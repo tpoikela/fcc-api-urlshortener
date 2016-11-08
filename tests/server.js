@@ -26,11 +26,13 @@ describe("/", () => {
     });
 });
 
-
 describe("/new/www.gmail.com", () => {
     it("Should shorten given URL", (done) => {
-        
+        chai.request(server).get("/new/www.gmail.com")
+        .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res).to.be.json;
+        }); 
         done();
     });
-    
 });
