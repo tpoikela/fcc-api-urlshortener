@@ -5,23 +5,29 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
 </head>
+
 <body>
-    <h1>URL Shortener microservice</h1>
-    
-    <p>A</p>
-    
-    <p>B</p>
-    
-    <p>C</p>
-    <code>
-        yyy
-    </code>
-    
-    <p>D</p>
-    <code>
-        xxx
-    </code>
-    
-    <p>Written by tpoikela</p>
+    <div class="container">
+        <h1>URL Shortener microservice</h1>
+        
+        <p>How to use it:</p>
+        <code>
+            Add /new/http://www.longaddress.com after this page's URL.
+        </code>
+        
+        <p>This will return you a shortened URL that you can use to access
+        the original location.</p>
+        
+        <p>You can also use this form below:</p>
+         <form action="/form" method="GET">
+          <div class="form-group">
+            <label for="pwd">URL:</label>
+            <input type="url" class="form-control" id="pwd">
+          </div>
+          <button type="submit" class="btn btn-default">Shorten</button>
+        </form>
+        
+        <p>Written by tpoikela</p>
+    </div>
     
 </body>

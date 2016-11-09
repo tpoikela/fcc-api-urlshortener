@@ -8,9 +8,12 @@ process.env.NODE_ENV = 'test';
 var chai = require("chai");
 var expect = chai.expect;
 
+var validUrl = require("valid-url");
+
 var chaiHTTP = require("chai-http");
 chai.use(chaiHTTP);
 
+var request = require("request");
 var server = require("../index");
 
 describe("/", () => {
@@ -39,6 +42,10 @@ describe(gmail_path, () => {
             
             expect(json).to.have.property("short_url");
             
+            var short_url = validUrl.isWebUri(json.short_url);
+            
+            expect(typeof short_url).not.to.equal("undefined");
+            
             expect(json.original_url).to.equal("http://www.gmail.com");
             
             done();
@@ -56,6 +63,42 @@ describe("Error response", () => {
             
             var json = JSON.parse(res.text);
             expect(json).to.have.property("error");
+            done();
         });
     });
 });
+
+
+describe("Full use case with URL redirection", () => {
+    var firstReq;
+    var short_url = "";
+    
+    before( (done) => {
+        chai.request(server).get("/new/https://www.google.com")
+        .end( (err, res) => {
+            expect(err).to.be.null;
+            expect(res).to.be.json;
+            
+            var text = res.text;
+            var json = JSON.parse(text);
+            
+            expect(json).to.have.property("short_url");
+            expect(json).to.have.property("original_url");
+            
+            short_url = json.short_url;
+            console.log("short_url is: " + short_url);
+            done();
+        });
+    });
+    
+    it("Should redirect to original URL", (done) => {
+        request.get(short_url, (err, res, body) => {
+            expect(err).to.be.null;
+            expect(res).to.be.html;
+            
+            done();
+        });
+        
+    });
+    
+})
