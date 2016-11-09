@@ -26,13 +26,36 @@ describe("/", () => {
     });
 });
 
-describe("/new/www.gmail.com", () => {
+var gmail_path =  "/new/http://www.gmail.com";
+
+describe(gmail_path, () => {
     it("Should shorten given URL", (done) => {
-        chai.request(server).get("/new/www.gmail.com")
-        .end((err, res) => {
+        chai.request(server).get(gmail_path)
+        .end( (err, res) => {
             expect(err).to.be.null;
             expect(res).to.be.json;
+            
+            var json = JSON.parse(res.text);
+            
+            expect(json).to.have.property("short_url");
+            
+            expect(json.original_url).to.equal("http://www.gmail.com");
+            
+            done();
+            
         }); 
-        done();
+    });
+});
+
+describe("Error response", () => {
+    it("Should return error for invalid URL", (done) => {
+        chai.request(server).get("/new/xxx.kkk.yyy")
+        .end( (err, res) => {
+            expect(err).to.be.null;
+            expect(res).to.be.json;
+            
+            var json = JSON.parse(res.text);
+            expect(json).to.have.property("error");
+        });
     });
 });
