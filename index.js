@@ -8,8 +8,8 @@ var app = express();
 var port = process.env.PORT || 8080;
 var DEBUG = process.env.DEBUG || 0;
 
-//var db_url = process.env.MONGOLAB_URI || "mongodb://localhost:27017/urlshortener";
-var db_url = "mongodb://localhost:27017/urlshortener";
+var db_url = process.env.MONGOLAB_URI;// || "mongodb://localhost:27017/urlshortener";
+//var db_url = "mongodb://localhost:27017/urlshortener";
 
 const Database = require("./src/database");
 const Extractor = require("./src/extractor");
