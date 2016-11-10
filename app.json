@@ -1,6 +1,6 @@
 {
-  "name": "HeaderParser for FreeCodeCamp",
-  "description": "Shows user IP, language and software information.",
-  "repository": "https://github.com/tpoikela/fcc-api-headerparser",
+  "name": "URL Shortener for FreeCodeCamp",
+  "description": "Shortens the given URL",
+  "repository": "https://github.com/tpoikela/fcc-api-urlshortener",
   "keywords": ["node", "express", "static"]
 }
