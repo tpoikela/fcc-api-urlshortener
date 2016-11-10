@@ -1,11 +1,14 @@
 
-var express = require("express");
+const url = require("url");
+const express = require("express");
+const querystring = require('querystring');
+
 var app = express();
 
 var port = process.env.PORT || 8080;
 var DEBUG = process.env.DEBUG || 0;
 
-var db_url = process.env.DB_URL || "mongodb://localhost:27017/urlshortener";
+var db_url = process.env.MONGOLAB_URI || "mongodb://localhost:27017/urlshortener";
 var base_url = process.env.URL || "https://camper-api-project-tpoikela.c9users.io";
 
 var Database = require("./src/database");
@@ -47,13 +50,39 @@ app.get('/new/*', function(req, res) {
     res.json({error: "Ill-formatted URL. Cannot shorten."});
 });
 
+// Process the form input here, respond also in JSON
 app.get("/form", function(req, res) {
-    console.log("Catch all function triggered");
-    res.sendStat(200);
+    if (DEBUG) console.log("ROUTE: app.get /form")
+    if (DEBUG) console.log("get /form triggered: " + JSON.stringify(req.url));
+    var urlObj = url.parse(req.url);
+    if (DEBUG) console.log("url.query: " + JSON.stringify(urlObj.query));
+    
+    var query = querystring.parse(urlObj.query);
+    if (DEBUG) console.log("parsed query: " + JSON.stringify(query));
+    
+    var orig_url = query.orig_url;
+    orig_url = "/new/" + orig_url; // Extractor expects this
+    orig_url = app.extractor.getUrl(orig_url);
+    
+    if (orig_url !== null) {
+        
+        app.db.add(orig_url, (id) => {
+            var short_url = base_url + "/" + id;
+            var json = {original_url: orig_url, short_url: short_url};
+            
+            // And return the shortened version
+            res.json(json);
+        });
+        
+    }
+    else {
+        res.json({error: "URL not formatted properly. Must start with https(s)://"});
+    }
 });
 
 // Here we must re-direct user to the original URL
 app.get('/:id', function(req, res){
+    if (DEBUG) console.log("ROUTE: app.get /:id")
     
     var url = app.db.get(req.params.id, (url) => {
         // redirect user to url

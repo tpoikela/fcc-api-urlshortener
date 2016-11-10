@@ -1,33 +1,42 @@
 <!DOCTYPE HTML>
 <head>
     <meta></meta>
-    <title>Timestamp microservice</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>URL Shortener Microservice</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
 </head>
 
 <body>
     <div class="container">
-        <h1>URL Shortener microservice</h1>
+        <h1>URL Shortener Microservice</h1>
+        <p>Tremble in fear Bitly. URL Shortener is here!</p>
         
-        <p>How to use it:</p>
-        <code>
-            Add /new/http://www.longaddress.com after this page's URL.
-        </code>
-        
+        <div>
+        <p>Joking aside, how to use it:</p>
+            Add 
+            <code>
+                /new/http://www.longaddress.com
+            </code>
+            after this page's URL. Either <code>http</code> or <code>https</code>
+            must follow right after <code>/new</code>.
+        </div>
+         
         <p>This will return you a shortened URL that you can use to access
         the original location.</p>
         
-        <p>You can also use this form below:</p>
+        <p>You can also copy the address here:</p>
          <form action="/form" method="GET">
           <div class="form-group">
             <label for="pwd">URL:</label>
-            <input type="url" class="form-control" id="pwd">
+            <input type="url" class="form-control" id="pwd" name="orig_url">
           </div>
           <button type="submit" class="btn btn-default">Shorten</button>
         </form>
         
-        <p>Written by tpoikela</p>
+        <p class="text-center">Written by 
+            <a href="http://freecodecamp.com/tpoikela">tpoikela</a>
+        </p>
+        
     </div>
     
 </body>

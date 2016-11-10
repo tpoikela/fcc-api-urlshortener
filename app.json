@@ -1,0 +1,6 @@
+{
+  "name": "HeaderParser for FreeCodeCamp",
+  "description": "Shows user IP, language and software information.",
+  "repository": "https://github.com/tpoikela/fcc-api-headerparser",
+  "keywords": ["node", "express", "static"]
+}
