@@ -8,27 +8,26 @@ var app = express();
 var port = process.env.PORT || 8080;
 var DEBUG = process.env.DEBUG || 0;
 
-var db_url = process.env.MONGOLAB_URI || "mongodb://localhost:27017/urlshortener";
-var base_url = process.env.URL || "https://camper-api-project-tpoikela.c9users.io";
+//var db_url = process.env.MONGOLAB_URI || "mongodb://localhost:27017/urlshortener";
+var db_url = "mongodb://localhost:27017/urlshortener";
 
-var Database = require("./src/database");
-var Extractor = require("./src/extractor");
+const Database = require("./src/database");
+const Extractor = require("./src/extractor");
 
 app.db = new Database(db_url);
 app.extractor = new Extractor();
 
 // Respond to / request with index.html
-app.get('/', function(req, res){
+app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
 // Here we must store the original address and return a shortened URL
-app.get(/\/new\/(http|www)/, function(req, res){
-    if (DEBUG) console.log("/new request with an URL");
-    
-    if (DEBUG) console.log("req.url: " + req.url);
+app.get(/\/new\/(http|www)/, (req, res) => {
+    if (DEBUG) console.log("app.get /new req.url: " + req.url);
     
     var orig_url = app.extractor.getUrl(req.url);
+    var base_url = getBaseUrl(req);
     
     if (orig_url !== null) {
         
@@ -46,12 +45,12 @@ app.get(/\/new\/(http|www)/, function(req, res){
     }
 });
 
-app.get('/new/*', function(req, res) {
-    res.json({error: "Ill-formatted URL. Cannot shorten."});
+app.get('/new/*', (req, res) => {
+    res.json({error: "Ill-formatted URL. Must start with proto http|https."});
 });
 
 // Process the form input here, respond also in JSON
-app.get("/form", function(req, res) {
+app.get("/form", (req, res) => {
     if (DEBUG) console.log("ROUTE: app.get /form")
     if (DEBUG) console.log("get /form triggered: " + JSON.stringify(req.url));
     var urlObj = url.parse(req.url);
@@ -63,6 +62,8 @@ app.get("/form", function(req, res) {
     var orig_url = query.orig_url;
     orig_url = "/new/" + orig_url; // Extractor expects this
     orig_url = app.extractor.getUrl(orig_url);
+    
+    var base_url = getBaseUrl(req);
     
     if (orig_url !== null) {
         
@@ -81,20 +82,25 @@ app.get("/form", function(req, res) {
 });
 
 // Here we must re-direct user to the original URL
-app.get('/:id', function(req, res){
+app.get('/:id', (req, res) => {
     if (DEBUG) console.log("ROUTE: app.get /:id")
     
     var url = app.db.get(req.params.id, (url) => {
         // redirect user to url
-        console.log("Redirectiong user to " + url);
+        console.log("Redirecting a user to " + url);
         res.redirect(url);
     });
     
 });
 
+/* Returns the base URL of this server.*/
+function getBaseUrl(req) {
+    var proto = req.headers['x-forwarded-proto'];
+    return proto + "://" + req.headers.host;
+};
 
 
-app.listen(port, function () {
+app.listen(port, () => {
     console.log('URL shortener microservice listening on port ' + port)
 });
 
