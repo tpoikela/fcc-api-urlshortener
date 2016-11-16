@@ -8,7 +8,7 @@ var app = express();
 var port = process.env.PORT || 8080;
 var DEBUG = process.env.DEBUG || 0;
 
-var db_url = process.env.MONGOLAB_URI;// || "mongodb://localhost:27017/urlshortener";
+var db_url = process.env.MONGOLAB_URI;
 //var db_url = "mongodb://localhost:27017/urlshortener";
 
 const Database = require("./src/database");
@@ -53,8 +53,19 @@ app.get('/new/*', (req, res) => {
 app.get("/form", (req, res) => {
     if (DEBUG) console.log("ROUTE: app.get /form")
     if (DEBUG) console.log("get /form triggered: " + JSON.stringify(req.url));
+    
+    if (typeof req.url === "undefined") {
+        res.sendStat(400);
+        return;
+    }
+    
     var urlObj = url.parse(req.url);
     if (DEBUG) console.log("url.query: " + JSON.stringify(urlObj.query));
+    
+    if (typeof urlObj.query === "undefined") {
+        res.sendStat(400);
+        return;
+    }
     
     var query = querystring.parse(urlObj.query);
     if (DEBUG) console.log("parsed query: " + JSON.stringify(query));
@@ -95,7 +106,12 @@ app.get('/:id', (req, res) => {
 
 /* Returns the base URL of this server.*/
 function getBaseUrl(req) {
+    console.log(JSON.stringify(req.headers));
     var proto = req.headers['x-forwarded-proto'];
+    if (typeof proto === "undefined") {
+        console.log("Couldn't determine protocol. Using http.");
+        return "http://" + req.headers.host;
+    }
     return proto + "://" + req.headers.host;
 };
 

@@ -39,6 +39,7 @@ describe(gmail_path, () => {
             expect(res).to.be.json;
             
             var json = JSON.parse(res.text);
+            console.log("res.text: " + res.text);
             
             expect(json).to.have.property("short_url");
             
@@ -54,6 +55,8 @@ describe(gmail_path, () => {
     });
 });
 
+var cern_path = "http://cern.ch";
+
 describe("Error response", () => {
     it("Should return error for invalid URL", (done) => {
         chai.request(server).get("/new/xxx.kkk.yyy")
@@ -67,7 +70,6 @@ describe("Error response", () => {
         });
     });
 });
-
 
 describe("Full use case with URL redirection", () => {
     var firstReq;
@@ -101,4 +103,4 @@ describe("Full use case with URL redirection", () => {
         
     });
     
-})
+});
